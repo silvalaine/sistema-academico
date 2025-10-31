@@ -158,11 +158,22 @@ from routes import *
 app.config['DEBUG'] = False
 app.config['ENV'] = 'production'
 
-# Inicializar banco de dados em produção
-@app.before_first_request
-def init_db():
-    with app.app_context():
-        db.create_all()
+# Inicializar banco de dados em produção de forma compatível com várias
+# versões do Flask (algumas builds serverless não expõem
+# `before_first_request`). Usamos um before_request que executa a
+# inicialização apenas uma vez por processo.
+app.config['DB_INITIALIZED'] = False
+
+@app.before_request
+def ensure_db_initialized():
+    if not app.config.get('DB_INITIALIZED'):
+        try:
+            with app.app_context():
+                db.create_all()
+        except Exception:
+            # Não falhar na importação — levantar o erro para aparecer nos logs
+            raise
+        app.config['DB_INITIALIZED'] = True
 
 # Configuração para servidores WSGI
 application = app
