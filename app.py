@@ -148,13 +148,20 @@ class Nota(db.Model):
 # Importar rotas
 from routes import *
 
+# Criar tabelas ao iniciar
+with app.app_context():
+    db.create_all()
+
+# Configuração para produção no PythonAnywhere
+application = app
+
+# Para desenvolvimento local
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
         # Verificar turmas ao iniciar
         turmas = Turma.query.filter_by(ativa=True).all()
         print(f"\nTurmas ativas no sistema: {len(turmas)}")
         for turma in turmas:
             print(f"- {turma.nome} ({turma.serie} - {turma.turno})")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)
