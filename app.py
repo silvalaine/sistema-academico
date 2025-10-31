@@ -6,7 +6,13 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sistema_academico_2025'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sistema_academico.db'
+
+# Usar SQLite em memória no Vercel
+if os.environ.get('VERCEL_ENV') == 'production':
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sistema_academico.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -148,16 +154,23 @@ class Nota(db.Model):
 # Importar rotas
 from routes import *
 
-# Criar tabelas ao iniciar
-with app.app_context():
-    db.create_all()
+# Configuração para produção
+app.config['DEBUG'] = False
+app.config['ENV'] = 'production'
 
-# Configuração para produção no PythonAnywhere
+# Inicializar banco de dados em produção
+@app.before_first_request
+def init_db():
+    with app.app_context():
+        db.create_all()
+
+# Configuração para servidores WSGI
 application = app
 
 # Para desenvolvimento local
 if __name__ == '__main__':
     with app.app_context():
+        db.create_all()
         # Verificar turmas ao iniciar
         turmas = Turma.query.filter_by(ativa=True).all()
         print(f"\nTurmas ativas no sistema: {len(turmas)}")
