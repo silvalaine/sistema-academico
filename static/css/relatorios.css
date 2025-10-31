@@ -1,0 +1,306 @@
+/* Estilos gerais para relatórios */
+.relatorio-cabecalho {
+    text-align: left;
+    margin-bottom: 22px;
+    /* Variáveis deixadas para fácil customização */
+    --rel-bg-start: #f8f9fa;
+    --rel-bg-end: #ffffff;
+    --rel-accent: #3498db;
+    padding: 14px 18px;
+    background: linear-gradient(to right, var(--rel-bg-start), var(--rel-bg-end));
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    border: 1px solid #e9ecef;
+    position: relative;
+}
+
+.relatorio-cabecalho h1 {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    border-bottom: 3px solid var(--rel-accent);
+    display: inline-block;
+    padding-bottom: 4px;
+}
+
+.relatorio-cabecalho .info {
+    color: #495057;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+.relatorio-cabecalho .info p {
+    margin: 5px 0;
+}
+
+.relatorio-data {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.relatorio-cabecalho .acoes {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: flex;
+    gap: 10px;
+}
+
+.relatorio-logo img {
+    height: 48px;
+    object-fit: contain;
+}
+
+.relatorio-titulo-area {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-relatorio {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-relatorio i {
+    font-size: 1.1em;
+}
+
+.btn-relatorio:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.relatorio-filtros {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.relatorio-filtros .filtro-item {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.relatorio-filtros .filtro-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.relatorio-corpo {
+    margin: 20px 0;
+}
+
+.relatorio-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.relatorio-tabela th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.relatorio-tabela td {
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+    color: #495057;
+}
+
+.relatorio-tabela tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.relatorio-tabela tr:hover {
+    background-color: #f2f2f2;
+}
+
+.relatorio-rodape {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #dee2e6;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.relatorio-total {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.relatorio-data {
+    font-style: italic;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    min-width: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+    border: 1px solid #1e7e34;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #bd2130;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #000;
+    border: 1px solid #d39e00;
+}
+
+/* Estilos específicos para impressão/PDF */
+@media print {
+    body {
+        font-size: 12pt;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .relatorio-cabecalho {
+        margin-bottom: 20px;
+    }
+    
+    .relatorio-tabela th {
+        background-color: #f8f9fa !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .relatorio-tabela tr:nth-child(even) {
+        background-color: #f8f9fa !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Melhorias para impressão de badges */
+    .badge {
+        border: 1.5px solid #000;
+        box-shadow: none;
+        padding: 4px 10px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .badge-success {
+        background-color: #28a745 !important;
+        color: white !important;
+        border-color: #1e7e34 !important;
+    }
+    
+    .badge-danger {
+        background-color: #dc3545 !important;
+        color: white !important;
+        border-color: #bd2130 !important;
+    }
+    
+    .badge-warning {
+        background-color: #ffc107 !important;
+        color: #000 !important;
+        border-color: #d39e00 !important;
+    }
+    
+    .page-break {
+        page-break-before: always;
+    }
+}
+
+/* Estilos específicos para boletim */
+.boletim-header {
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.boletim-info {
+    margin-bottom: 20px;
+}
+
+.boletim-info .info-item {
+    margin-bottom: 10px;
+}
+
+.boletim-info .info-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.boletim-disciplinas {
+    margin-top: 30px;
+}
+
+.boletim-notas th {
+    text-align: center;
+}
+
+.boletim-media {
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+.boletim-resultado {
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.boletim-resultado.aprovado {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.boletim-resultado.reprovado {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.boletim-assinaturas {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.assinatura {
+    text-align: center;
+    flex: 1;
+    margin: 0 20px;
+}
+
+.assinatura-linha {
+    width: 200px;
+    border-top: 1px solid #000;
+    margin: 10px auto;
+}

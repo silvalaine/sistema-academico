@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block page_title %}Editar Nota{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Editar Nota</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Aluno</label>
+                            <div class="form-control-plaintext">{{ nota.aluno.nome }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Disciplina</label>
+                            <div class="form-control-plaintext">{{ nota.disciplina.nome }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Período</label>
+                            <select class="form-select" name="periodo_id">
+                                {% for periodo in periodos %}
+                                <option value="{{ periodo.id }}" {% if nota.periodo_id == periodo.id %}selected{% endif %}>{{ periodo.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="tipo_avaliacao_id" class="form-label">Tipo de Avaliação</label>
+                            <select class="form-select" id="tipo_avaliacao_id" name="tipo_avaliacao_id">
+                                {% for tipo in tipos_avaliacao %}
+                                <option value="{{ tipo.id }}" {% if nota.tipo_avaliacao_id == tipo.id %}selected{% endif %}>{{ tipo.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nota_valor" class="form-label">Nota</label>
+                            <input type="number" step="0.1" min="0" max="10" class="form-control" id="nota_valor" name="nota" value="{{ nota.nota }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="data_lancamento" class="form-label">Data</label>
+                            <input type="date" class="form-control" id="data_lancamento" name="data_lancamento" value="{{ nota.data_lancamento.strftime('%Y-%m-%d') }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="observacoes" class="form-label">Observações</label>
+                        <textarea class="form-control" id="observacoes" name="observacoes" rows="3">{{ nota.observacoes or '' }}</textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Atualizar Nota
+                        </button>
+                        <a href="{{ url_for('consultar_notas') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

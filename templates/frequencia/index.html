@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block page_title %}Controle de Frequência{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Registrar Frequência</h5>
+            </div>
+            <div class="card-body">
+                <p>Registre a frequência dos alunos por turma e data.</p>
+                <a href="{{ url_for('registrar_frequencia') }}" class="btn btn-primary">
+                    <i class="bi bi-calendar-check"></i> Registrar Frequência
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Consultar Frequência</h5>
+            </div>
+            <div class="card-body">
+                <p>Consulte o histórico de frequência dos alunos.</p>
+                <a href="{{ url_for('consultar_frequencia') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-search"></i> Consultar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Turmas Disponíveis</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Ano</th>
+                                <th>Série</th>
+                                <th>Turno</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for turma in turmas %}
+                            <tr>
+                                <td>{{ turma.nome }}</td>
+                                <td>{{ turma.ano }}</td>
+                                <td>{{ turma.serie }}</td>
+                                <td>{{ turma.turno }}</td>
+                                <td>
+                                    <a href="{{ url_for('registrar_frequencia', turma_id=turma.id) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-calendar-check"></i> Registrar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">Nenhuma turma cadastrada</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

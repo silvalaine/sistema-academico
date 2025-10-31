@@ -1,0 +1,78 @@
+{% extends "relatorios/base_relatorio.html" %}
+
+{% block page_title %}Relatórios{% endblock %}
+
+{% block relatorio_titulo %}Relatórios{% endblock %}
+
+{% block relatorio_descricao %}Selecione um relatório para visualizar, filtrar e exportar.{% endblock %}
+
+{% block relatorio_conteudo %}
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Relatórios de Cadastros</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('relatorio_turmas') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-people"></i> Relatório de Turmas
+                    </a>
+                    <a href="{{ url_for('relatorio_disciplinas') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-book"></i> Relatório de Disciplinas
+                    </a>
+                    <a href="{{ url_for('relatorio_alunos') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-person"></i> Relatório de Alunos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Relatórios Acadêmicos</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('relatorio_frequencia') }}" class="btn btn-outline-success">
+                        <i class="bi bi-calendar-check"></i> Relatório de Frequência
+                    </a>
+                    <a href="{{ url_for('relatorio_conteudo') }}" class="btn btn-outline-success">
+                        <i class="bi bi-journal-text"></i> Relatório de Conteúdo
+                    </a>
+                    <a href="{{ url_for('relatorio_notas') }}" class="btn btn-outline-success">
+                        <i class="bi bi-star"></i> Relatório de Notas
+                    </a>
+                    <a href="{{ url_for('boletim') }}" class="btn btn-outline-success">
+                        <i class="bi bi-card-checklist"></i> Boletim Escolar
+                    </a>
+                    <a href="{{ url_for('relatorio_mapa') }}" class="btn btn-outline-success">
+                        <i class="bi bi-grid-3x3"></i> Mapa de Acompanhamento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações do Sistema</h5>
+            </div>
+            <div class="card-body">
+                <p>O sistema acadêmico permite gerar relatórios detalhados de todas as atividades escolares:</p>
+                <ul>
+                    <li><strong>Relatórios de Cadastros:</strong> Listagem completa de turmas, disciplinas e alunos cadastrados</li>
+                    <li><strong>Relatórios Acadêmicos:</strong> Análise de frequência, conteúdos ministrados e notas dos alunos</li>
+                    <li><strong>Filtros Avançados:</strong> Todos os relatórios possuem filtros por data, turma, disciplina e período</li>
+                    <li><strong>Exportação:</strong> Os relatórios podem ser impressos ou exportados para PDF</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

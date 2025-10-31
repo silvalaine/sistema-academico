@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block page_title %}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/relatorios.css') }}">
+{% block relatorio_styles %}{% endblock %}
+<style>
+/* Esconde o cabeçalho padrão do layout principal quando usamos o layout de relatórios */
+.main-content > .d-flex.border-bottom {
+    display: none !important;
+}
+
+/* Ajustes menores para o cabeçalho do relatório */
+.relatorio-cabecalho {
+    /* Variáveis para fácil customização */
+    --rel-accent: #3498db;
+    --rel-bg-start: #f8f9fa;
+    --rel-bg-end: #ffffff;
+    padding: 14px 18px;
+}
+.relatorio-cabecalho h1 {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+.relatorio-cabecalho .info {
+    font-size: 13px;
+}
+.relatorio-cabecalho .acoes .btn-relatorio {
+    padding: 6px 12px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="relatorio-cabecalho" style="--rel-accent: {{ rel_accent|default('#3498db') }}; --rel-bg-start: {{ rel_bg_start|default('#f8f9fa') }}; --rel-bg-end: {{ rel_bg_end|default('#ffffff') }};">
+    <div class="cabecalho-top d-flex align-items-center">
+        {% if logo_relatorio %}
+            <div class="relatorio-logo me-3">
+                <img src="{{ logo_relatorio }}" alt="Logo do relatório" />
+            </div>
+        {% else %}
+            {# Se não passar `logo_relatorio`, tentamos um caminho padrão (se existir) - não quebra se não houver arquivo #}
+            {% set _logo_path = url_for('static', filename='img/logo_relatorio.png') %}
+            <div class="relatorio-logo me-3 d-none">
+                <img src="{{ _logo_path }}" alt="Logo do relatório" />
+            </div>
+        {% endif %}
+
+        <div class="relatorio-titulo-area">
+            <h1>{% block relatorio_titulo %}{% endblock %}</h1>
+            <div class="info">
+                <p>{% block relatorio_descricao %}{% endblock %}</p>
+                <p class="relatorio-data">Gerado em: {{ data_relatorio }}</p>
+            </div>
+        </div>
+
+        <div class="acoes no-print ms-auto">
+            <button onclick="window.print()" class="btn btn-primary btn-relatorio me-2">
+                <i class="bi bi-printer"></i> Imprimir
+            </button>
+            {% if request.args %}
+            <a href="{{ request.url }}{% if '?' in request.url %}&{% else %}?{% endif %}formato=pdf" class="btn btn-success btn-relatorio">
+                <i class="bi bi-file-pdf"></i> Exportar PDF
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block relatorio_filtros %}{% endblock %}
+
+<div class="relatorio-corpo">
+    {% block relatorio_conteudo %}{% endblock %}
+</div>
+
+{% block relatorio_rodape %}{% endblock %}
+{% endblock %}

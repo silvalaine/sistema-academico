@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+
+# Ambiente Virtual
+venv/
+ENV/
+env/
+.env
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos do Sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de Log
+*.log
+
+# Arquivos gerados
+static/relatorios/
+!static/relatorios/.gitkeep
+
+# SQLite database files
+*.db
+*.sqlite
+*.sqlite3

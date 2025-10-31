@@ -1,0 +1,374 @@
+/* Estilos específicos para disciplinas no boletim */
+.disciplina-card {
+    margin-bottom: 30px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.disciplina-header {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 8px 8px 0 0;
+}
+
+.disciplina-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.disciplina-info {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.disciplina-corpo {
+    padding: 20px;
+}
+
+/* Estilos para médias */
+.media-final {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.media-final-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.media-final {
+    background-color: #343a40;
+    padding: 25px;
+    border-radius: 6px;
+    margin-top: 30px;
+}
+
+.media-final-header {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.media-final-valor {
+    font-size: 38px;
+    font-weight: 700;
+    margin: 15px 0;
+    padding: 20px 35px;
+    border-radius: 6px;
+    display: inline-block;
+    min-width: 180px;
+    letter-spacing: 0.5px;
+    border: 4px solid rgba(255,255,255,0.9);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.media-final-valor.aprovado {
+    background-color: #28a745; /* verde mais padrão (melhor contraste) */
+    color: #ffffff;
+}
+
+.media-final-valor.recuperacao {
+    background-color: #ffc107; /* amarelo */
+    color: #212529; /* texto escuro para melhor leitura */
+    text-shadow: none;
+}
+
+.media-final-valor.reprovado {
+    background-color: #c82333; /* vermelho ligeiramente mais suave */
+    color: #ffffff;
+}
+
+.media-final-status {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.media-final-status {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Estilos para legenda */
+.boletim-legenda {
+    margin: 30px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.legenda-titulo {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.legenda-item {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+/* Estilos para assinaturas */
+.boletim-assinaturas {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+}
+
+.assinatura {
+    text-align: center;
+    min-width: 200px;
+}
+
+.assinatura-linha {
+    border-top: 1px solid #000;
+    margin: 20px auto;
+    width: 80%;
+}
+
+.assinatura p {
+    margin-top: 5px;
+    color: #495057;
+}
+
+/* Estilos para tabelas de notas */
+.notas-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.notas-tabela th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.notas-tabela td {
+    padding: 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.notas-tabela tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Estilos para cabeçalho do boletim */
+.boletim-header {
+    text-align: center;
+    padding: 30px 0;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+
+.boletim-header h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.boletim-info {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.info-item {
+    padding: 5px 15px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.info-label {
+    font-weight: bold;
+    color: #495057;
+    margin-right: 5px;
+}
+
+/* Estilos melhorados para badges */
+.badge {
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 17px;
+    font-weight: 700;
+    display: inline-block;
+    text-align: center;
+    min-width: 60px;
+    border: 3px solid rgba(255,255,255,0.9);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+}
+
+.badge.badge-lg {
+    font-size: 19px;
+    padding: 12px 20px;
+    min-width: 70px;
+}
+
+.badge-success {
+    background-color: #198754; /* verde com bom contraste */
+    color: #ffffff;
+}
+
+.badge-danger {
+    background-color: #c82333; /* vermelho consistente com média */
+    color: #ffffff;
+}
+
+.badge-warning {
+    background-color: #ffb020; /* amarelo/âmbar mais legível */
+    color: #212529; /* texto escuro para legibilidade */
+    text-shadow: none;
+}
+
+@media screen {
+/* Melhor contraste específico para as tabelas dos relatórios/boletim (aplica somente na tela) */
+.relatorio-corpo table th,
+.relatorio-corpo table td {
+    color: #212529; /* texto escuro padrão para legibilidade */
+}
+
+.relatorio-corpo .text-muted {
+    color: #6c757d !important; /* um pouco mais escuro que o padrão para visibilidade */
+}
+
+/* Garantir que badges tenham texto legível (branco na maioria, escuro para warning) */
+.relatorio-corpo .badge {
+    color: #ffffff !important;
+}
+.relatorio-corpo .badge-warning {
+    color: #212529 !important;
+}
+
+/* Garantir fundo opaco e bom contraste nas zonas de média/nota */
+.relatorio-corpo .badge,
+.relatorio-corpo .media-final-valor {
+    background-clip: padding-box;
+}
+
+/* Forçar visibilidade das badges dentro das células do boletim (sobrescrever conflitos) */
+.relatorio-corpo td .badge,
+.relatorio-corpo th .badge {
+    display: inline-block !important;
+    min-width: 34px !important;
+    padding: 4px 6px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #ffffff !important; /* texto branco por padrão */
+    background-color: #0b3d91 !important; /* azul escuro para notas */
+}
+
+.relatorio-corpo td .badge-warning,
+.relatorio-corpo th .badge-warning {
+    background-color: #ffb020 !important;
+    color: #212529 !important;
+}
+
+.relatorio-corpo td .badge-danger,
+.relatorio-corpo th .badge-danger {
+    background-color: #c82333 !important;
+    color: #ffffff !important;
+}
+
+.relatorio-corpo td .badge-success,
+.relatorio-corpo th .badge-success {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
+
+/* Forçar cor do texto dentro das células dos períodos (nomes e percentuais) */
+.relatorio-corpo td,
+.relatorio-corpo td div,
+.relatorio-corpo td small {
+    color: #212529 !important;
+}
+} /* fim @media screen */
+
+/* Hover effects */
+.badge:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s;
+}
+
+/* Ajustes para impressão */
+@media print {
+    .boletim-header {
+        background-color: #f8f9fa !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .disciplina-header {
+        background-color: #f8f9fa !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .media-final-valor {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Melhorias para impressão de badges */
+    .badge {
+        border: 2.5px solid #000;
+        box-shadow: none;
+        padding: 6px 14px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    .badge-success {
+        background-color: #0d4419 !important;
+        color: #ffffff !important;
+        border-color: #062c0e !important;
+    }
+    
+    .badge-danger {
+        background-color: #7a0012 !important;
+        color: #ffffff !important;
+        border-color: #5c000d !important;
+    }
+    
+    .badge-warning {
+        background-color: #c08900 !important;
+        color: #000000 !important;
+        border-color: #886200 !important;
+    }
+
+    .media-final-valor {
+        color-adjust: exact;
+    }
+    
+    .boletim-assinaturas {
+        page-break-inside: avoid;
+    }
+    
+    .disciplina-card {
+        page-break-inside: avoid;
+    }
+}

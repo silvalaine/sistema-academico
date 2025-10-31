@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ turmas_count }}</h4>
+                        <p class="card-text">Turmas Ativas</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-people fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ alunos_count }}</h4>
+                        <p class="card-text">Alunos Cadastrados</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-person fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ disciplinas_count }}</h4>
+                        <p class="card-text">Disciplinas</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-book fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ periodos_count }}</h4>
+                        <p class="card-text">Períodos Ativos</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-calendar fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Acesso Rápido</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('nova_turma') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-plus-circle"></i> Nova Turma
+                    </a>
+                    <a href="{{ url_for('novo_aluno') }}" class="btn btn-outline-success">
+                        <i class="bi bi-person-plus"></i> Novo Aluno
+                    </a>
+                    <a href="{{ url_for('registrar_frequencia') }}" class="btn btn-outline-warning">
+                        <i class="bi bi-calendar-check"></i> Registrar Frequência
+                    </a>
+                    <a href="{{ url_for('lancar_notas') }}" class="btn btn-outline-info">
+                        <i class="bi bi-star"></i> Lançar Notas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Relatórios</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('relatorio_frequencia') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-graph-up"></i> Relatório de Frequência
+                    </a>
+                    <a href="{{ url_for('relatorio_notas') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-clipboard-data"></i> Relatório de Notas
+                    </a>
+                    <a href="{{ url_for('relatorio_conteudo') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-journal-text"></i> Relatório de Conteúdo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

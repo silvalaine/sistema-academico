@@ -1,0 +1,109 @@
+{% extends 'relatorios/base_relatorio.html' %}
+
+{% block relatorio_titulo %}Relação de Notas Por Disciplina - Mapa de Acompanhamento{% endblock %}
+
+{% block relatorio_descricao %}
+{% if turma_id %}
+    {% set turma = turmas|selectattr('id', 'equalto', turma_id|int)|first %}
+    Turma: {{ turma.nome if turma else '—' }}
+{% endif %}
+{% if disciplina_id %}
+    {% set disciplina = disciplinas|selectattr('id', 'equalto', disciplina_id|int)|first %}
+    - Disciplina: {{ disciplina.nome if disciplina else '—' }}
+{% endif %}
+{% endblock %}
+
+{% block relatorio_filtros %}
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="turma_id" class="form-label">Turma</label>
+                <select name="turma_id" id="turma_id" class="form-select">
+                    <option value="">Todas as turmas</option>
+                    {% for turma in turmas %}
+                    <option value="{{ turma.id }}" {% if turma_id|int == turma.id %}selected{% endif %}>
+                        {{ turma.nome }} - {{ turma.serie }} ({{ turma.turno }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="disciplina_id" class="form-label">Disciplina</label>
+                <select name="disciplina_id" id="disciplina_id" class="form-select">
+                    <option value="">Todas as disciplinas</option>
+                    {% for disciplina in disciplinas %}
+                    <option value="{{ disciplina.id }}" {% if disciplina_id|int == disciplina.id %}selected{% endif %}>
+                        {{ disciplina.nome }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-filter"></i> Filtrar
+                </button>
+                {% if request.args %}
+                <a href="{{ url_for('relatorio_mapa') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Limpar
+                </a>
+                {% endif %}
+                {% if request.args %}
+                <a href="{{ request.url }}{% if '?' in request.url %}&{% else %}?{% endif %}formato=pdf" class="btn btn-success">
+                    <i class="bi bi-file-pdf"></i> Exportar PDF
+                </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block relatorio_conteudo %}
+<div class="table-responsive">
+    <table class="table table-bordered table-sm" style="font-size:12px; width:100%; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th rowspan="2" style="vertical-align:middle; width:30px;">Nº</th>
+                <th rowspan="2" style="vertical-align:middle;">Aluno(a)</th>
+                {% for periodo in periodos %}
+                    <th colspan="4" style="text-align:center;">{{ loop.index }}º Bimestre</th>
+                {% endfor %}
+                <th rowspan="2" style="vertical-align:middle; text-align:center; width:80px;">Média Anual</th>
+                <th rowspan="2" style="vertical-align:middle; text-align:center; width:80px;">Rec. Final</th>
+                <th rowspan="2" style="vertical-align:middle; text-align:center; width:60px;">Falta Anual</th>
+                <th rowspan="2" style="vertical-align:middle; text-align:center; width:80px;">Média Final</th>
+            </tr>
+            <tr>
+                {% for periodo in periodos %}
+                    <th style="text-align:center; width:60px;">Nota</th>
+                    <th style="text-align:center; width:40px;">Falta</th>
+                    <th style="text-align:center; width:50px;">Rec.</th>
+                    <th style="text-align:center; width:60px;">Média</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in mapa %}
+            <tr>
+                <td style="text-align:center;">{{ loop.index }}</td>
+                <td>{{ item.aluno.nome }}</td>
+                {% for periodo in periodos %}
+                    {% set media = item.medias_periodos.get(periodo.id) if item.medias_periodos is defined else None %}
+                    {% set notas = item.notas_por_periodo.get(periodo.id) if item.notas_por_periodo is defined else None %}
+                    <td style="text-align:center;">{% if media is not none %}{{ '%.2f'|format(media) }}{% else %}—{% endif %}</td>
+                    <td style="text-align:center;">{{ item.faltas_por_periodo.get(periodo.id, '—') }}</td>
+                    <td style="text-align:center;">—</td>
+                    <td style="text-align:center;">{% if media is not none %}{{ '%.2f'|format(media) }}{% else %}—{% endif %}</td>
+                {% endfor %}
+                <td style="text-align:center; font-weight:600;">{% if item.media_final is not none %}{{ '%.2f'|format(item.media_final) }}{% else %}—{% endif %}</td>
+                <td style="text-align:center;">—</td>
+                <td style="text-align:center;">{{ item.total_faltas }}</td>
+                <td style="text-align:center; font-weight:700;">{% if item.media_final is not none %}{{ '%.2f'|format(item.media_final) }}{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

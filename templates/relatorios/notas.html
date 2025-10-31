@@ -1,0 +1,140 @@
+{% extends "relatorios/base_relatorio.html" %}
+
+{% block relatorio_titulo %}
+Relação de Notas Por Componentes Curriculares - Parciais{% if turma %} - {{ turma.serie }} {% endif %}
+{% endblock %}
+
+{% block relatorio_descricao %}
+{% if turma %}{{ turma.nome }} - {{ turma.turno }}{% endif %}
+{% if disciplina %} - {{ disciplina.nome }}{% endif %}
+{% endblock %}
+
+{% block relatorio_filtros %}
+<div class="relatorio-filtros no-print">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Filtros de Consulta</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="turma_id" class="form-label">Turma</label>
+                    <select class="form-select" id="turma_id" name="turma_id" onchange="console.log('Turma selecionada:', this.value)">
+                        <option value="">Selecione...</option>
+                        {% for t in turmas %}
+                        <option value="{{ t.id }}" {% if t.id|string == request.args.get('turma_id')|string %}selected{% endif %}>
+                            {{ t.serie }} - {{ t.nome }} ({{ t.turno }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="disciplina_id" class="form-label">Disciplina</label>
+                    <select class="form-select" id="disciplina_id" name="disciplina_id" onchange="console.log('Disciplina selecionada:', this.value)">
+                        <option value="">Selecione...</option>
+                        {% for d in disciplinas %}
+                        <option value="{{ d.id }}" {% if d.id|string == request.args.get('disciplina_id')|string %}selected{% endif %}>
+                            {{ d.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="periodo_id" class="form-label">Período</label>
+                    <select class="form-select" id="periodo_id" name="periodo_id" onchange="console.log('Período selecionado:', this.value)">
+                        <option value="">Selecione...</option>
+                        {% for p in periodos %}
+                        <option value="{{ p.id }}" {% if p.id|string == request.args.get('periodo_id')|string %}selected{% endif %}>
+                            {{ p.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                        {% if turma_id and disciplina_id and periodo_id %}
+                        <a href="{{ url_for('relatorio_notas', turma_id=turma_id, disciplina_id=disciplina_id, periodo_id=periodo_id, formato='pdf') }}" class="btn btn-success">
+                            <i class="bi bi-file-pdf"></i> Exportar PDF
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block relatorio_conteudo %}
+{% set turma_id = request.args.get('turma_id') %}
+{% set disciplina_id = request.args.get('disciplina_id') %}
+{% set periodo_id = request.args.get('periodo_id') %}
+{% if turma_id and disciplina_id and periodo_id %}
+<div class="table-responsive">
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Aluno(a)</th>
+                {% for tipo in tipos_avaliacao %}
+                <th class="text-center">{{ tipo.nome }}</th>
+                {% endfor %}
+                <th class="text-center">Nota Final</th>
+                <th class="text-center">Méd. Ger.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aluno_id, dados in notas_por_aluno.items() %}
+            <tr>
+                <td>{{ dados.codigo or '-' }}</td>
+                <td>{{ dados.nome }}</td>
+                {% for tipo in tipos_avaliacao %}
+                <td class="text-center">{{ dados.notas[tipo.nome] }}</td>
+                {% endfor %}
+                <td class="text-center">{{ "%.1f"|format(dados.media_final) if dados.media_final > 0 else '-' }}</td>
+                <td class="text-center">{{ "%.1f"|format(dados.media_final) if dados.media_final > 0 else '-' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="{{ 2 + tipos_avaliacao|length + 2 }}" class="text-center">
+                    Nenhuma nota encontrada
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    Selecione a turma, disciplina e período para visualizar as notas.
+</div>
+{% endif %}
+{% endblock %}
+
+{% block relatorio_styles %}
+<style>
+    table th {
+        background-color: #f8f9fa;
+        vertical-align: middle;
+    }
+    .nota-cell {
+        text-align: center;
+        font-family: monospace;
+    }
+    .media-final {
+        font-weight: bold;
+    }
+    @media print {
+        .table {
+            font-size: 12px;
+        }
+        .nota-cell {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}

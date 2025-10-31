@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block page_title %}Lançar Notas{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Lançar Notas</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="turma_id" class="form-label">Turma *</label>
+                            <select class="form-select" id="turma_id" name="turma_id" required>
+                                <option value="">Selecione a turma</option>
+                                {% for turma in turmas %}
+                                <option value="{{ turma.id }}" {% if turma.id|string == turma_id %}selected{% endif %}>
+                                    {{ turma.nome }} - {{ turma.serie }} ({{ turma.turno }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="disciplina_id" class="form-label">Disciplina *</label>
+                            <select class="form-select" id="disciplina_id" name="disciplina_id" required>
+                                <option value="">Selecione a disciplina</option>
+                                {% for disciplina in disciplinas %}
+                                <option value="{{ disciplina.id }}">{{ disciplina.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="periodo_id" class="form-label">Período *</label>
+                            <select class="form-select" id="periodo_id" name="periodo_id" required>
+                                <option value="">Selecione o período</option>
+                                {% for periodo in periodos %}
+                                <option value="{{ periodo.id }}">{{ periodo.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tipo_avaliacao_id" class="form-label">Tipo de Avaliação *</label>
+                            <select class="form-select" id="tipo_avaliacao_id" name="tipo_avaliacao_id" required>
+                                <option value="">Selecione o tipo</option>
+                                {% for tipo in tipos_avaliacao %}
+                                <option value="{{ tipo.id }}">{{ tipo.nome }} ({{ (tipo.peso * 100)|round(1) }}%)</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        {% if turma_id and not alunos %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> 
+                            Não há alunos cadastrados nesta turma. 
+                            <a href="{{ url_for('novo_aluno') }}" class="alert-link">Cadastrar novo aluno</a>
+                        </div>
+                        {% elif alunos %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Matrícula</th>
+                                    <th>Nota</th>
+                                    <th>Observações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for aluno in alunos %}
+                                <tr>
+                                    <td>{{ aluno.nome }}</td>
+                                    <td>{{ aluno.matricula or '-' }}</td>
+                                    <td>
+                                        <input type="number" class="form-control" name="nota_{{ aluno.id }}" 
+                                               step="0.1" min="0" max="10" placeholder="0.0">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="obs_{{ aluno.id }}" placeholder="Observações">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            Selecione uma turma para visualizar os alunos.
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Salvar Notas
+                        </button>
+                        <a href="{{ url_for('notas') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Função para atualizar a URL com os parâmetros selecionados
+    function atualizarPagina() {
+        const turmaId = document.getElementById('turma_id').value;
+        const disciplinaId = document.getElementById('disciplina_id').value;
+        const periodoId = document.getElementById('periodo_id').value;
+        const tipoAvaliacaoId = document.getElementById('tipo_avaliacao_id').value;
+        
+        let url = '{{ url_for("lancar_notas") }}?';
+        let params = [];
+        
+        if (turmaId) params.push('turma_id=' + encodeURIComponent(turmaId));
+        if (disciplinaId) params.push('disciplina_id=' + encodeURIComponent(disciplinaId));
+        if (periodoId) params.push('periodo_id=' + encodeURIComponent(periodoId));
+        if (tipoAvaliacaoId) params.push('tipo_avaliacao_id=' + encodeURIComponent(tipoAvaliacaoId));
+        
+        window.location.href = url + params.join('&');
+    }
+
+    // Evento para quando a turma é alterada
+    document.getElementById('turma_id').addEventListener('change', function() {
+        if (this.value) {
+            console.log('Turma selecionada:', this.value);
+            atualizarPagina();
+        }
+    });
+
+    // Evento para quando a disciplina é alterada
+    document.getElementById('disciplina_id').addEventListener('change', function() {
+        if (document.getElementById('turma_id').value) {
+            console.log('Disciplina selecionada:', this.value);
+            atualizarPagina();
+        }
+    });
+
+    // Evento para quando o período é alterado
+    document.getElementById('periodo_id').addEventListener('change', function() {
+        if (document.getElementById('turma_id').value) {
+            console.log('Período selecionado:', this.value);
+            atualizarPagina();
+        }
+    });
+
+    // Evento para quando o tipo de avaliação é alterado
+    document.getElementById('tipo_avaliacao_id').addEventListener('change', function() {
+        if (document.getElementById('turma_id').value) {
+            console.log('Tipo de avaliação selecionado:', this.value);
+            atualizarPagina();
+        }
+    });
+
+    // Ao carregar a página, preencher os campos com os valores da URL
+    window.addEventListener('load', function() {
+        const params = new URLSearchParams(window.location.search);
+        
+        const turmaId = params.get('turma_id');
+        const disciplinaId = params.get('disciplina_id');
+        const periodoId = params.get('periodo_id');
+        const tipoAvaliacaoId = params.get('tipo_avaliacao_id');
+        
+        if (turmaId) document.getElementById('turma_id').value = turmaId;
+        if (disciplinaId) document.getElementById('disciplina_id').value = disciplinaId;
+        if (periodoId) document.getElementById('periodo_id').value = periodoId;
+        if (tipoAvaliacaoId) document.getElementById('tipo_avaliacao_id').value = tipoAvaliacaoId;
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "relatorios/base_relatorio.html" %}
+
+{% block page_title %}Relatório de Frequência{% endblock %}
+
+{% block relatorio_titulo %}Relatório de Frequência{% endblock %}
+
+{% block relatorio_descricao %}Registro de frequência dos alunos{% endblock %}
+
+{% block relatorio_styles %}
+<style>
+@media print {
+    .btn { display: none !important; }
+}
+</style>
+{% endblock %}
+
+{% block relatorio_filtros %}
+<div class="relatorio-filtros no-print">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Filtros de Consulta</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="turma_id" class="form-label">Turma</label>
+                    <select class="form-select" id="turma_id" name="turma_id">
+                        <option value="">Todas as turmas</option>
+                        {% for turma in turmas %}
+                        <option value="{{ turma.id }}" {% if turma.id|string == request.args.get('turma_id') %}selected{% endif %}>
+                            {{ turma.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="data_inicio" class="form-label">Data Início</label>
+                    <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{ request.args.get('data_inicio', '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="data_fim" class="form-label">Data Fim</label>
+                    <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{ request.args.get('data_fim', '') }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block relatorio_conteudo %}
+<div class="card mt-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Turma</th>
+                        <th>Aluno</th>
+                        <th>Status</th>
+                        <th>Observações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for freq in frequencias %}
+                    <tr>
+                        <td>{{ freq.data.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ freq.turma.nome }}</td>
+                        <td>{{ freq.aluno.nome }}</td>
+                        <td>
+                            {% if freq.presente %}
+                                <span class="badge bg-success">Presente</span>
+                            {% else %}
+                                <span class="badge bg-danger">Faltou</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ freq.observacoes or '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhum registro encontrado</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-3">
+            <p><strong>Total de registros:</strong> {{ frequencias|length }}</p>
+            <p><strong>Data do relatório:</strong> {{ data_relatorio }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="{{ url_for('relatorios') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Voltar aos Relatórios
+    </a>
+</div>
+{% endblock %}

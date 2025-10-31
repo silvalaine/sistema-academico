@@ -1,0 +1,262 @@
+{% extends "relatorios/base_relatorio.html" %}
+
+{% block page_title %}Boletim Escolar{% endblock %}
+
+{% block relatorio_titulo %}Boletim Escolar{% endblock %}
+
+{% block relatorio_descricao %}Resultado do desempenho acadêmico do aluno{% endblock %}
+
+{% block relatorio_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/boletim.css') }}">
+<style>
+.disciplina-card {
+    margin-bottom: 30px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.disciplina-header {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 8px 8px 0 0;
+}
+
+.disciplina-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.disciplina-info {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.disciplina-corpo {
+    padding: 20px;
+}
+
+.media-final {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.media-final-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.media-final-valor {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    min-width: 80px;
+}
+
+.media-final-valor.aprovado {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+}
+
+.media-final-valor.recuperacao {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+}
+
+.media-final-valor.reprovado {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+}
+
+.media-final-status {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+@media print {
+    .disciplina-header, .media-final-valor {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block relatorio_filtros %}
+<div class="relatorio-filtros no-print">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Filtros</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="turma_id" class="form-label">Turma</label>
+                    <select class="form-select" id="turma_id" name="turma_id">
+                        <option value="">Todas as turmas</option>
+                        {% for turma in turmas %}
+                        <option value="{{ turma.id }}" {% if turma.id|string == request.args.get('turma_id') %}selected{% endif %}>
+                            {{ turma.nome }} - {{ turma.serie }} ({{ turma.turno }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="aluno_id" class="form-label">Aluno</label>
+                    <select class="form-select" id="aluno_id" name="aluno_id">
+                        <option value="">Todos os alunos</option>
+                        {% for aluno in alunos %}
+                        <option value="{{ aluno.id }}" {% if aluno.id|string == request.args.get('aluno_id') %}selected{% endif %}>
+                            {{ aluno.nome }} ({{ aluno.matricula }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                        {% if request.args.get('turma_id') or request.args.get('aluno_id') %}
+                        <a href="{{ request.url|replace('formato=pdf', '') }}&formato=pdf" class="btn btn-success">
+                            <i class="bi bi-file-pdf"></i> Exportar PDF
+                        </a>
+                        {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if boletins %}
+<div class="relatorio-corpo">
+    {% for aluno_id, dados in boletins.items() %}
+    <div class="boletim-header mb-3">
+        <h2>{{ dados.aluno.nome }}</h2>
+        <div class="boletim-info">
+            <div class="info-item">
+                <span class="info-label">Matrícula:</span> {{ dados.aluno.matricula }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Turma:</span> {{ dados.aluno.turma.nome }} - {{ dados.aluno.turma.serie }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Ano Letivo:</span> {{ dados.aluno.turma.ano }}
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm" style="font-size:13px; width:100%; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th style="vertical-align:middle;">Disciplina</th>
+                    {% for periodo in periodos %}
+                    <th style="text-align:center;">{{ periodo.nome }}</th>
+                    {% endfor %}
+                    <th style="text-align:center; width:110px;">Média Final</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disciplina_id, medias in dados.medias.items() %}
+                <tr>
+                    <td>{{ disciplinas[disciplina_id].nome }}</td>
+                    {% for periodo in periodos %}
+                        {% set media_periodo = medias.por_periodo.get(periodo.id) if medias.por_periodo is defined else None %}
+                        <td style="text-align:center; vertical-align:middle;">
+                            {# Mostrar tipos de avaliação e notas, se existirem #}
+                            {% if medias.notas_por_tipo and periodo.id in medias.notas_por_tipo %}
+                                <div style="font-size:11px; text-align:left; color:#212529 !important;">
+                                    {% for nota in medias.notas_por_tipo[periodo.id] %}
+                                        <div style="display:flex; justify-content:space-between; gap:8px;">
+                                            <div style="flex:1;">{{ nota.tipo_avaliacao.nome }} <small style="color:#6c757d !important;">({{ (nota.tipo_avaliacao.peso * 100)|round(0) }}%)</small></div>
+                                            <div style="width:55px; text-align:right;">
+                                                <span class="badge badge-lg {% if nota.nota >= 7 %}badge-success{% elif nota.nota >= 5 %}badge-warning{% else %}badge-danger{% endif %}" 
+                                                      style="{% if nota.nota >= 7 %}background:#198754;color:#ffffff;{% elif nota.nota >= 5 %}background:#ffb020;color:#212529;{% else %}background:#c82333;color:#ffffff;{% endif %} padding:2px 6px; border-radius:4px; font-weight:700; display:inline-block;">
+                                                    {{ "%.1f"|format(nota.nota) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-muted">—</div>
+                            {% endif %}
+
+                            {# Linha separadora e média do período #}
+                            <div style="margin-top:6px; border-top:1px solid #e9ecef; padding-top:6px; font-weight:700;">
+                                {% if media_periodo is not none %}
+                                    Média: {{ "%.1f"|format(media_periodo) }}
+                                {% else %}
+                                    Média: —
+                                {% endif %}
+                            </div>
+                        </td>
+                    {% endfor %}
+                    <td style="text-align:center; font-weight:700;">
+                        {% if medias.media_final is not none %}
+                            {{ "%.1f"|format(medias.media_final) }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="boletim-legenda mt-3">
+        <div class="legenda-titulo">Legenda de Avaliação</div>
+        <div class="legenda-item">
+            <span class="badge badge-success">≥ 7,0</span> Aprovado
+        </div>
+        <div class="legenda-item">
+            <span class="badge badge-warning">≥ 5,0</span> Em recuperação
+        </div>
+        <div class="legenda-item">
+            <span class="badge badge-danger">&lt; 5,0</span> Reprovado
+        </div>
+    </div>
+
+    <div class="boletim-assinaturas mt-4">
+        <div class="assinatura">
+            <div class="assinatura-linha"></div>
+            <p>Responsável</p>
+        </div>
+        <div class="assinatura">
+            <div class="assinatura-linha"></div>
+            <p>Coordenador(a)</p>
+        </div>
+        <div class="assinatura">
+            <div class="assinatura-linha"></div>
+            <p>Diretor(a)</p>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+{% elif request.args.get('turma_id') or request.args.get('aluno_id') %}
+<div class="alert alert-info mt-4">
+    <i class="bi bi-info-circle"></i> Nenhum boletim encontrado para os filtros selecionados.
+</div>
+{% endif %}
+
+<script>
+    document.getElementById('turma_id').addEventListener('change', function() {
+        document.querySelector('form').submit();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block page_title %}Controle de Notas{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Lançar Notas</h5>
+            </div>
+            <div class="card-body">
+                <p>Lance as notas dos alunos por turma, disciplina e período.</p>
+                <a href="{{ url_for('lancar_notas') }}" class="btn btn-primary">
+                    <i class="bi bi-star"></i> Lançar Notas
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Consultar Notas</h5>
+            </div>
+            <div class="card-body">
+                <p>Consulte o histórico de notas dos alunos.</p>
+                <a href="{{ url_for('consultar_notas') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-search"></i> Consultar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Turmas Disponíveis</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Ano</th>
+                                <th>Série</th>
+                                <th>Turno</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for turma in turmas %}
+                            <tr>
+                                <td>{{ turma.nome }}</td>
+                                <td>{{ turma.ano }}</td>
+                                <td>{{ turma.serie }}</td>
+                                <td>{{ turma.turno }}</td>
+                                <td>
+                                    <a href="{{ url_for('lancar_notas', turma_id=turma.id) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-star"></i> Lançar Notas
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">Nenhuma turma cadastrada</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

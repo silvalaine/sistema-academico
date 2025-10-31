@@ -1,0 +1,132 @@
+{% extends "relatorios/base_relatorio.html" %}
+
+{% block page_title %}Relatório de Alunos{% endblock %}
+
+{% block relatorio_titulo %}Relatório de Alunos{% endblock %}
+
+{% block relatorio_descricao %}{% if request.args.get('turma_id') %}Relatório de alunos da turma selecionada{% else %}Lista de alunos cadastrados{% endif %}{% endblock %}
+
+{% block relatorio_styles %}{% endblock %}
+
+{% block relatorio_filtros %}
+<div class="relatorio-filtros no-print">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Filtros de Consulta</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="turma_id" class="form-label">Turma</label>
+                    <select class="form-select" id="turma_id" name="turma_id">
+                        <option value="">Todas as turmas</option>
+                        {% for turma in turmas %}
+                        <option value="{{ turma.id }}" {% if turma.id|string == request.args.get('turma_id') %}selected{% endif %}>
+                            {{ turma.nome }} - {{ turma.serie }} ({{ turma.turno }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <a href="{{ url_for('relatorio_alunos') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Limpar Filtros
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block relatorio_conteudo %}
+<div class="relatorio-corpo">
+    <div class="table-responsive">
+        <table class="relatorio-tabela">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Matrícula</th>
+                    <th>CPF</th>
+                    <th>Data Nascimento</th>
+                    <th>Turma</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <td>{{ aluno.nome }}</td>
+                    <td>{{ aluno.matricula or '-' }}</td>
+                    <td>{{ aluno.cpf or '-' }}</td>
+                    <td>{% if aluno.data_nascimento %}{{ aluno.data_nascimento.strftime('%d/%m/%Y') }}{% else %}-{% endif %}</td>
+                    <td>
+                        {% if aluno.turma %}
+                            {{ aluno.turma.nome }} - {{ aluno.turma.serie }} ({{ aluno.turma.turno }})
+                        {% else %}
+                            <span class="badge badge-warning">Sem turma</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ aluno.telefone or '-' }}</td>
+                    <td>{{ aluno.email or '-' }}</td>
+                    <td>
+                        {% if aluno.ativo %}
+                            <span class="badge badge-success">Ativo</span>
+                        {% else %}
+                            <span class="badge badge-danger">Inativo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center">
+                        {% if request.args.get('turma_id') %}
+                            Nenhum aluno encontrado nesta turma
+                        {% else %}
+                            Nenhum aluno cadastrado
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="relatorio-rodape">
+    <div class="relatorio-filtros">
+        <p class="relatorio-total">Total de alunos: {{ alunos|length }}</p>
+        <p>
+            <span class="filtro-label">Filtros aplicados:</span>
+            {% if request.args.get('turma_id') %}
+                {% for turma in turmas %}
+                    {% if turma.id|string == request.args.get('turma_id') %}
+                        Turma: {{ turma.nome }} - {{ turma.serie }} ({{ turma.turno }})
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                Todas as turmas
+            {% endif %}
+        </p>
+    </div>
+    <p class="relatorio-data">Gerado em: {{ data_relatorio }}</p>
+</div>
+
+<div class="mt-3 no-print">
+    <a href="{{ url_for('relatorios') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Voltar aos Relatórios
+    </a>
+</div>
+{% endblock %}

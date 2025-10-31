@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block page_title %}Cadastro de Turmas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Turmas</h2>
+    <a href="{{ url_for('nova_turma') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nova Turma
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Ano</th>
+                        <th>Série</th>
+                        <th>Turno</th>
+                        <th>Data Criação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for turma in turmas %}
+                    <tr>
+                        <td>{{ turma.nome }}</td>
+                        <td>{{ turma.ano }}</td>
+                        <td>{{ turma.serie }}</td>
+                        <td>{{ turma.turno }}</td>
+                        <td>{{ turma.data_criacao.strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            <a href="{{ url_for('editar_turma', id=turma.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{{ url_for('excluir_turma', id=turma.id) }}" class="btn btn-sm btn-outline-danger" 
+                               onclick="return confirm('Tem certeza que deseja excluir esta turma?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Nenhuma turma cadastrada</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

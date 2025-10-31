@@ -1,0 +1,126 @@
+{% extends "relatorios/base_relatorio.html" %}
+
+{% block page_title %}Relatório de Notas{% endblock %}
+
+{% block relatorio_titulo %}Relação de Notas Por Componentes Curriculares - Parciais{% endblock %}
+
+{% block relatorio_descricao %}
+{% if turma %}
+{{ turma.serie }} - {{ turma.nome }} - {{ turma.turno }}
+{% endif %}
+{% if disciplina %}
+- {{ disciplina.nome }}
+{% endif %}
+{% endblock %}
+
+{% block relatorio_styles %}
+<style>
+    .nota {
+        text-align: center;
+    }
+    table th {
+        background-color: #f8f9fa;
+    }
+    .nota-cell {
+        text-align: center;
+        font-family: monospace;
+    }
+    .media-final {
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block relatorio_filtros %}
+<div class="relatorio-filtros no-print">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Filtros de Consulta</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="turma_id" class="form-label">Turma</label>
+                    <select class="form-select" id="turma_id" name="turma_id">
+                        <option value="">Todas as turmas</option>
+                        {% for turma in turmas %}
+                        <option value="{{ turma.id }}" {% if turma.id|string == request.args.get('turma_id') %}selected{% endif %}>
+                            {{ turma.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="disciplina_id" class="form-label">Disciplina</label>
+                    <select class="form-select" id="disciplina_id" name="disciplina_id">
+                        <option value="">Todas as disciplinas</option>
+                        {% for disciplina in disciplinas %}
+                        <option value="{{ disciplina.id }}" {% if disciplina.id|string == request.args.get('disciplina_id') %}selected{% endif %}>
+                            {{ disciplina.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="periodo_id" class="form-label">Período</label>
+                    <select class="form-select" id="periodo_id" name="periodo_id">
+                        <option value="">Todos os períodos</option>
+                        {% for periodo in periodos %}
+                        <option value="{{ periodo.id }}" {% if periodo.id|string == request.args.get('periodo_id') %}selected{% endif %}>
+                            {{ periodo.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block relatorio_conteudo %}
+{% if turma_id and disciplina_id and periodo_id %}
+<div class="table-responsive">
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Aluno(a)</th>
+                {% for tipo in tipos_avaliacao %}
+                <th class="text-center">{{ tipo.nome }}</th>
+                {% endfor %}
+                <th class="text-center">Nota Final</th>
+                <th class="text-center">Méd. Ger.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aluno_id, dados in notas_por_aluno.items() %}
+            <tr>
+                <td>{{ dados.codigo or '-' }}</td>
+                <td>{{ dados.nome }}</td>
+                {% for tipo in tipos_avaliacao %}
+                <td class="nota-cell">{{ dados.notas[tipo.nome] }}</td>
+                {% endfor %}
+                <td class="nota-cell media-final">{{ "%.1f"|format(dados.media_final) if dados.media_final > 0 else '-' }}</td>
+                <td class="nota-cell media-final">{{ "%.1f"|format(dados.media_final) if dados.media_final > 0 else '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    Selecione a turma, disciplina e período para visualizar as notas.
+</div>
+{% endif %}
+{% endblock %}
+
+{% endblock %}
